@@ -1,713 +1,394 @@
-// SoilSense - Main JavaScript
+// Main JavaScript for SoilSense UI
 
-// Global Variables
-let currentSection = 'dashboard';
-let isLoading = false;
-let notifications = [];
-let chatMessages = [];
-
-// DOM Elements
-const loadingScreen = document.getElementById('loading-screen');
-const app = document.getElementById('app');
-const navLinks = document.querySelectorAll('.nav-link');
-const sections = document.querySelectorAll('.section');
-const notificationBtn = document.getElementById('notification-btn');
-const notificationPanel = document.getElementById('notification-panel');
-const closeNotifications = document.getElementById('close-notifications');
-const chatWidget = document.getElementById('chat-widget');
-const chatToggle = document.getElementById('chat-toggle');
-const chatBody = document.getElementById('chat-body');
-const chatMessages = document.getElementById('chat-messages');
-const chatInput = document.getElementById('chat-input');
-const sendBtn = document.getElementById('send-btn');
-
-// Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🌾 SoilSense Platform Initializing...');
-    
-    // Initialize all modules
     initializeApp();
-    initializeNavigation();
-    initializeNotifications();
-    initializeChat();
-    initializeAnimations();
-    initializePlaceholderData();
-    
-    // Hide loading screen after initialization
-    setTimeout(() => {
-        hideLoadingScreen();
-    }, 2000);
 });
 
-// Initialize the main application
 function initializeApp() {
-    console.log('Initializing SoilSense application...');
+    // Hide loading screen and show app
+    const loadingScreen = document.getElementById('loading-screen');
+    const app = document.getElementById('app');
     
-    // Set up service worker for PWA
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js')
-            .then(registration => {
-                console.log('Service Worker registered:', registration);
-            })
-            .catch(error => {
-                console.log('Service Worker registration failed:', error);
-            });
+    if (loadingScreen && app) {
+        app.style.display = 'none';
+        
+        // Show loading screen for 3 seconds
+        setTimeout(() => {
+            if (typeof gsap !== 'undefined') {
+                gsap.to(loadingScreen, {
+                    opacity: 0,
+                    duration: 0.5,
+                    onComplete: () => {
+                        loadingScreen.style.display = 'none';
+                        app.style.display = 'block';
+                        gsap.from(app, {
+                            opacity: 0,
+                            duration: 0.5
+                        });
+                    }
+                });
+            } else {
+                loadingScreen.style.display = 'none';
+                app.style.display = 'block';
+            }
+        }, 3000);
     }
+
+    // Initialize navigation
+    initializeNavigation();
     
-    // Initialize real-time updates
-    initializeRealTimeUpdates();
+    // Initialize chat widget
+    initializeChatWidget();
     
-    // Set up periodic data refresh
-    setInterval(refreshData, 30000); // Refresh every 30 seconds
+    // Initialize notification panel
+    initializeNotificationPanel();
+    
+    // Initialize action buttons
+    initializeActionButtons();
+    
+    // Initialize upload functionality
+    initializeUpload();
+    
+    // Initialize weather updates
+    initializeWeatherUpdates();
+    
+    // Initialize market data updates
+    initializeMarketUpdates();
+    
+    // Initialize crop status updates
+    initializeCropUpdates();
 }
 
-// Initialize navigation
+// Navigation functionality
 function initializeNavigation() {
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('.section');
+    
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
+            
+            // Remove active class from all links and sections
+            navLinks.forEach(l => l.classList.remove('active'));
+            sections.forEach(s => s.classList.remove('active'));
+            
+            // Add active class to clicked link
+            this.classList.add('active');
+            
+            // Show corresponding section
             const targetSection = this.getAttribute('data-section');
-            switchSection(targetSection);
+            const targetElement = document.getElementById(targetSection);
+            
+            if (targetElement) {
+                targetElement.classList.add('active');
+                
+                // Animate section entrance
+                if (typeof gsap !== 'undefined') {
+                    gsap.from(targetElement, {
+                        opacity: 0,
+                        y: 30,
+                        duration: 0.6,
+                        ease: 'power2.out'
+                    });
+                }
+            }
         });
     });
-    
-    // Set initial active section
-    switchSection('dashboard');
 }
 
-// Switch between sections
-function switchSection(sectionName) {
-    // Remove active class from all sections and nav links
-    sections.forEach(section => section.classList.remove('active'));
-    navLinks.forEach(link => link.classList.remove('active'));
+// Chat widget functionality
+function initializeChatWidget() {
+    const chatToggle = document.getElementById('chat-toggle');
+    const chatWidget = document.getElementById('chat-widget');
+    const chatBody = document.getElementById('chat-body');
+    const sendBtn = document.getElementById('send-btn');
+    const chatInput = document.getElementById('chat-input');
+    const chatMessages = document.getElementById('chat-messages');
     
-    // Add active class to target section and nav link
-    const targetSection = document.getElementById(sectionName);
-    const targetNavLink = document.querySelector(`[data-section="${sectionName}"]`);
-    
-    if (targetSection && targetNavLink) {
-        targetSection.classList.add('active');
-        targetNavLink.classList.add('active');
-        currentSection = sectionName;
-        
-        // Trigger section-specific animations
-        animateSectionTransition(sectionName);
-        
-        // Load section-specific data
-        loadSectionData(sectionName);
+    if (chatToggle && chatWidget) {
+        chatToggle.addEventListener('click', function() {
+            chatWidget.classList.toggle('expanded');
+            chatWidget.classList.toggle('collapsed');
+            
+            if (chatWidget.classList.contains('expanded')) {
+                chatBody.style.display = 'block';
+                chatInput.focus();
+            } else {
+                chatBody.style.display = 'none';
+            }
+        });
     }
-}
-
-// Animate section transitions
-function animateSectionTransition(sectionName) {
-    const section = document.getElementById(sectionName);
-    if (section) {
-        section.classList.add('animate-fade-in');
-        
-        // Add staggered animations to section children
-        const children = section.querySelectorAll('.animate-on-load');
-        children.forEach((child, index) => {
-            setTimeout(() => {
-                child.classList.add('animate-fade-in-up');
-            }, index * 100);
+    
+    if (sendBtn && chatInput && chatMessages) {
+        sendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
         });
     }
 }
 
-// Load section-specific data
-function loadSectionData(sectionName) {
-    switch(sectionName) {
-        case 'dashboard':
-            loadDashboardData();
-            break;
-        case 'advisory':
-            loadAdvisoryData();
-            break;
-        case 'market':
-            loadMarketData();
-            break;
-        case 'weather':
-            loadWeatherData();
-            break;
-        case 'insurance':
-            loadInsuranceData();
-            break;
-    }
-}
-
-// Initialize notifications
-function initializeNotifications() {
-    notificationBtn.addEventListener('click', toggleNotificationPanel);
-    closeNotifications.addEventListener('click', toggleNotificationPanel);
-    
-    // Close notification panel when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!notificationPanel.contains(e.target) && !notificationBtn.contains(e.target)) {
-            notificationPanel.classList.remove('open');
-        }
-    });
-    
-    // Load initial notifications
-    loadNotifications();
-}
-
-// Toggle notification panel
-function toggleNotificationPanel() {
-    notificationPanel.classList.toggle('open');
-    
-    if (notificationPanel.classList.contains('open')) {
-        notificationPanel.classList.add('animate-slide-in-right');
-    } else {
-        notificationPanel.classList.add('animate-slide-out-right');
-    }
-}
-
-// Initialize chat functionality
-function initializeChat() {
-    chatToggle.addEventListener('click', toggleChat);
-    sendBtn.addEventListener('click', sendMessage);
-    chatInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            sendMessage();
-        }
-    });
-    
-    // Load initial chat messages
-    loadChatMessages();
-}
-
-// Toggle chat widget
-function toggleChat() {
-    chatWidget.classList.toggle('minimized');
-    
-    if (chatWidget.classList.contains('minimized')) {
-        chatBody.style.display = 'none';
-    } else {
-        chatBody.style.display = 'flex';
-        chatInput.focus();
-    }
-}
-
-// Send chat message
 function sendMessage() {
-    const message = chatInput.value.trim();
-    if (message) {
-        addChatMessage('user', message);
+    const chatInput = document.getElementById('chat-input');
+    const chatMessages = document.getElementById('chat-messages');
+    
+    if (chatInput && chatMessages && chatInput.value.trim()) {
+        const message = chatInput.value.trim();
+        
+        // Add user message
+        addMessageToChat('user', message);
+        
+        // Clear input
         chatInput.value = '';
         
         // Simulate AI response
         setTimeout(() => {
-            const aiResponse = generateAIResponse(message);
-            addChatMessage('bot', aiResponse);
+            const responses = [
+                "I can help you with crop management. What specific issue are you facing?",
+                "Based on your location, I recommend checking the weather forecast for the next few days.",
+                "Your wheat crop looks healthy. Consider harvesting in the next 3-5 days for optimal yield.",
+                "I've detected some pest activity in your field. Would you like me to provide treatment recommendations?",
+                "The market prices for wheat are currently favorable. Consider selling within the next week."
+            ];
+            
+            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+            addMessageToChat('bot', randomResponse);
         }, 1000);
     }
 }
 
-// Add chat message
-function addChatMessage(sender, message) {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${sender}`;
+function addMessageToChat(sender, message) {
+    const chatMessages = document.getElementById('chat-messages');
     
-    const contentDiv = document.createElement('div');
-    contentDiv.className = 'message-content';
-    contentDiv.innerHTML = `<p>${message}</p>`;
-    
-    const timeSpan = document.createElement('span');
-    timeSpan.className = 'message-time';
-    timeSpan.textContent = 'Just now';
-    
-    messageDiv.appendChild(contentDiv);
-    messageDiv.appendChild(timeSpan);
-    
-    chatMessages.appendChild(messageDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-    
-    // Store message
-    chatMessages.push({
-        sender: sender,
-        message: message,
-        timestamp: new Date()
-    });
-}
-
-// Generate AI response (placeholder)
-function generateAIResponse(userMessage) {
-    const responses = [
-        "I understand your concern about the crop. Let me check the latest advisory for you.",
-        "Based on the weather forecast, I recommend adjusting your irrigation schedule.",
-        "The market prices are favorable this week. Consider selling your produce.",
-        "I've detected a potential pest issue. Here's what you should do...",
-        "Your crop is looking healthy! Continue with the current practices."
-    ];
-    
-    return responses[Math.floor(Math.random() * responses.length)];
-}
-
-// Initialize animations
-function initializeAnimations() {
-    // Add animation classes to elements
-    const animatedElements = document.querySelectorAll('.action-card, .crop-card, .advisory-card');
-    animatedElements.forEach((element, index) => {
-        element.classList.add('animate-on-load');
-        element.style.animationDelay = `${index * 0.1}s`;
-    });
-    
-    // Add hover animations
-    const hoverElements = document.querySelectorAll('.action-card, .crop-card, .market-card, .insurance-card');
-    hoverElements.forEach(element => {
-        element.addEventListener('mouseenter', function() {
-            this.classList.add('hover-lift');
-        });
+    if (chatMessages) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}`;
         
-        element.addEventListener('mouseleave', function() {
-            this.classList.remove('hover-lift');
-        });
-    });
-    
-    // Add click animations
-    const clickElements = document.querySelectorAll('button, .action-card');
-    clickElements.forEach(element => {
-        element.addEventListener('click', function() {
-            this.classList.add('animate-button-click');
-            setTimeout(() => {
-                this.classList.remove('animate-button-click');
-            }, 200);
-        });
-    });
-}
-
-// Initialize placeholder data
-function initializePlaceholderData() {
-    // Load dashboard data
-    loadDashboardData();
-    
-    // Set up real-time data simulation
-    simulateRealTimeData();
-}
-
-// Load dashboard data
-function loadDashboardData() {
-    console.log('Loading dashboard data...');
-    
-    // Simulate loading
-    const dashboardElements = document.querySelectorAll('.crop-card, .advisory-card');
-    dashboardElements.forEach(element => {
-        element.classList.add('loading');
-        setTimeout(() => {
-            element.classList.remove('loading');
-        }, 1000);
-    });
-    
-    // Update crop progress bars
-    updateCropProgress();
-    
-    // Update weather summary
-    updateWeatherSummary();
-}
-
-// Load advisory data
-function loadAdvisoryData() {
-    console.log('Loading advisory data...');
-    
-    // Initialize image upload functionality
-    initializeImageUpload();
-    
-    // Load analysis results
-    loadAnalysisResults();
-}
-
-// Load market data
-function loadMarketData() {
-    console.log('Loading market data...');
-    
-    // Initialize charts
-    initializeCharts();
-    
-    // Update market prices
-    updateMarketPrices();
-}
-
-// Load weather data
-function loadWeatherData() {
-    console.log('Loading weather data...');
-    
-    // Update current weather
-    updateCurrentWeather();
-    
-    // Update forecast
-    updateWeatherForecast();
-}
-
-// Load insurance data
-function loadInsuranceData() {
-    console.log('Loading insurance data...');
-    
-    // Update coverage information
-    updateCoverageInfo();
-    
-    // Update claims status
-    updateClaimsStatus();
-}
-
-// Initialize image upload
-function initializeImageUpload() {
-    const uploadArea = document.getElementById('upload-area');
-    const uploadBtn = document.getElementById('upload-image-btn');
-    const analysisResults = document.getElementById('analysis-results');
-    
-    if (uploadArea && uploadBtn) {
-        uploadBtn.addEventListener('click', function() {
-            // Simulate file selection
-            simulateImageUpload();
-        });
-        
-        uploadArea.addEventListener('click', function() {
-            simulateImageUpload();
-        });
-        
-        uploadArea.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            this.style.borderColor = 'var(--primary-color)';
-            this.style.background = 'var(--gray-50)';
-        });
-        
-        uploadArea.addEventListener('dragleave', function(e) {
-            e.preventDefault();
-            this.style.borderColor = 'var(--gray-300)';
-            this.style.background = 'transparent';
-        });
-        
-        uploadArea.addEventListener('drop', function(e) {
-            e.preventDefault();
-            this.style.borderColor = 'var(--gray-300)';
-            this.style.background = 'transparent';
-            simulateImageUpload();
-        });
-    }
-}
-
-// Simulate image upload
-function simulateImageUpload() {
-    const uploadArea = document.getElementById('upload-area');
-    const analysisResults = document.getElementById('analysis-results');
-    
-    if (uploadArea && analysisResults) {
-        // Show loading state
-        uploadArea.innerHTML = `
-            <div class="upload-placeholder">
-                <div class="loading-spinner"></div>
-                <h3>Analyzing Image...</h3>
-                <p>Please wait while we process your crop image</p>
+        messageDiv.innerHTML = `
+            <div class="message-content">
+                <p>${message}</p>
             </div>
+            <span class="message-time">${new Date().toLocaleTimeString()}</span>
         `;
         
-        // Simulate analysis delay
-        setTimeout(() => {
-            uploadArea.style.display = 'none';
-            analysisResults.style.display = 'block';
-            analysisResults.classList.add('animate-fade-in');
-        }, 2000);
-    }
-}
-
-// Initialize charts
-function initializeCharts() {
-    // Wheat price chart
-    const wheatChart = document.getElementById('wheat-chart');
-    if (wheatChart) {
-        createPriceChart(wheatChart, 'Wheat Prices', [2400, 2450, 2420, 2480, 2450, 2500, 2450]);
-    }
-    
-    // Mustard price chart
-    const mustardChart = document.getElementById('mustard-chart');
-    if (mustardChart) {
-        createPriceChart(mustardChart, 'Mustard Prices', [5200, 5150, 5100, 5050, 5000, 4950, 4900]);
-    }
-}
-
-// Create price chart
-function createPriceChart(canvas, label, data) {
-    const ctx = canvas.getContext('2d');
-    
-    // Create gradient
-    const gradient = ctx.createLinearGradient(0, 0, 0, 200);
-    gradient.addColorStop(0, 'rgba(16, 185, 129, 0.3)');
-    gradient.addColorStop(1, 'rgba(16, 185, 129, 0.1)');
-    
-    // Draw chart
-    ctx.fillStyle = gradient;
-    ctx.beginPath();
-    ctx.moveTo(0, 200);
-    
-    const step = canvas.width / (data.length - 1);
-    data.forEach((value, index) => {
-        const x = index * step;
-        const y = 200 - ((value - Math.min(...data)) / (Math.max(...data) - Math.min(...data))) * 150;
-        ctx.lineTo(x, y);
-    });
-    
-    ctx.lineTo(canvas.width, 200);
-    ctx.closePath();
-    ctx.fill();
-    
-    // Draw line
-    ctx.strokeStyle = 'var(--primary-color)';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    
-    data.forEach((value, index) => {
-        const x = index * step;
-        const y = 200 - ((value - Math.min(...data)) / (Math.max(...data) - Math.min(...data))) * 150;
-        if (index === 0) {
-            ctx.moveTo(x, y);
-        } else {
-            ctx.lineTo(x, y);
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        // Animate message entrance
+        if (typeof gsap !== 'undefined') {
+            gsap.from(messageDiv, {
+                opacity: 0,
+                y: 20,
+                duration: 0.3,
+                ease: 'power2.out'
+            });
         }
-    });
-    
-    ctx.stroke();
-}
-
-// Update crop progress
-function updateCropProgress() {
-    const progressBars = document.querySelectorAll('.progress-fill');
-    progressBars.forEach(bar => {
-        const targetWidth = bar.style.width;
-        bar.style.width = '0%';
-        
-        setTimeout(() => {
-            bar.style.width = targetWidth;
-        }, 500);
-    });
-}
-
-// Update weather summary
-function updateWeatherSummary() {
-    const weatherSummary = document.querySelector('.weather-summary');
-    if (weatherSummary) {
-        const temperature = Math.floor(Math.random() * 10) + 25;
-        const conditions = ['Sunny', 'Partly Cloudy', 'Cloudy', 'Light Rain'];
-        const condition = conditions[Math.floor(Math.random() * conditions.length)];
-        
-        weatherSummary.innerHTML = `
-            <i class="fas fa-cloud-sun"></i>
-            <span>${temperature}°C, ${condition}</span>
-        `;
     }
 }
 
-// Update market prices
-function updateMarketPrices() {
-    const priceElements = document.querySelectorAll('.current-price');
-    priceElements.forEach(element => {
-        const currentPrice = parseInt(element.textContent.replace(/[^\d]/g, ''));
-        const change = Math.floor(Math.random() * 200) - 100;
-        const newPrice = currentPrice + change;
-        
-        element.textContent = `₹${newPrice}`;
-        
-        const trendElement = element.closest('.market-card').querySelector('.trend');
-        if (trendElement) {
-            if (change > 0) {
-                trendElement.textContent = `+₹${change}`;
-                trendElement.className = 'trend up';
-            } else {
-                trendElement.textContent = `-₹${Math.abs(change)}`;
-                trendElement.className = 'trend down';
+// Notification panel functionality
+function initializeNotificationPanel() {
+    const notificationBtn = document.getElementById('notification-btn');
+    const notificationPanel = document.getElementById('notification-panel');
+    const closeNotifications = document.getElementById('close-notifications');
+    
+    if (notificationBtn && notificationPanel) {
+        notificationBtn.addEventListener('click', function() {
+            notificationPanel.classList.toggle('active');
+            
+            if (notificationPanel.classList.contains('active')) {
+                if (typeof gsap !== 'undefined') {
+                    gsap.from(notificationPanel, {
+                        opacity: 0,
+                        x: 100,
+                        duration: 0.3,
+                        ease: 'power2.out'
+                    });
+                }
+            }
+        });
+    }
+    
+    if (closeNotifications && notificationPanel) {
+        closeNotifications.addEventListener('click', function() {
+            notificationPanel.classList.remove('active');
+        });
+    }
+}
+
+// Action buttons functionality
+function initializeActionButtons() {
+    const actionCards = document.querySelectorAll('.action-card');
+    
+    actionCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const action = this.getAttribute('data-action');
+            
+            // Show notification based on action
+            let message = '';
+            let type = 'info';
+            
+            switch(action) {
+                case 'pest-detection':
+                    message = 'Opening pest detection camera...';
+                    type = 'info';
+                    break;
+                case 'weather-check':
+                    message = 'Fetching latest weather data...';
+                    type = 'info';
+                    break;
+                case 'market-prices':
+                    message = 'Loading current market prices...';
+                    type = 'info';
+                    break;
+                case 'insurance-claim':
+                    message = 'Opening insurance claim form...';
+                    type = 'info';
+                    break;
+            }
+            
+            if (window.SoilSense && window.SoilSense.showNotification) {
+                window.SoilSense.showNotification(message, type);
+            }
+            
+            // Animate button click
+            if (typeof gsap !== 'undefined') {
+                gsap.to(this, {
+                    scale: 0.95,
+                    duration: 0.1,
+                    yoyo: true,
+                    repeat: 1
+                });
+            }
+        });
+    });
+}
+
+// Upload functionality
+function initializeUpload() {
+    const uploadBtn = document.getElementById('upload-image-btn');
+    const uploadArea = document.getElementById('upload-area');
+    const analysisResults = document.getElementById('analysis-results');
+    
+    if (uploadBtn && uploadArea) {
+        uploadBtn.addEventListener('click', function() {
+            // Create file input
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.style.display = 'none';
+            
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file && window.SoilSense && window.SoilSense.handleFileUpload) {
+                    window.SoilSense.handleFileUpload(file);
+                }
+            });
+            
+            document.body.appendChild(fileInput);
+            fileInput.click();
+            document.body.removeChild(fileInput);
+        });
+    }
+}
+
+// Weather updates
+function initializeWeatherUpdates() {
+    // Simulate real-time weather updates
+    setInterval(() => {
+        const weatherSummary = document.querySelector('.weather-summary span');
+        if (weatherSummary) {
+            const temperatures = ['28°C', '29°C', '27°C', '26°C'];
+            const conditions = ['Partly Cloudy', 'Sunny', 'Cloudy', 'Light Rain'];
+            
+            const randomTemp = temperatures[Math.floor(Math.random() * temperatures.length)];
+            const randomCondition = conditions[Math.floor(Math.random() * conditions.length)];
+            
+            weatherSummary.textContent = `${randomTemp}, ${randomCondition}`;
+            
+            // Animate update
+            if (typeof gsap !== 'undefined') {
+                gsap.to(weatherSummary, {
+                    scale: 1.1,
+                    duration: 0.2,
+                    yoyo: true,
+                    repeat: 1
+                });
             }
         }
-    });
+    }, 30000); // Update every 30 seconds
 }
 
-// Update current weather
-function updateCurrentWeather() {
-    const weatherInfo = document.querySelector('.weather-info h2');
-    if (weatherInfo) {
-        const temperature = Math.floor(Math.random() * 10) + 25;
-        weatherInfo.textContent = `${temperature}°C`;
-    }
-}
-
-// Update weather forecast
-function updateWeatherForecast() {
-    const forecastDays = document.querySelectorAll('.forecast-day');
-    forecastDays.forEach(day => {
-        const tempElement = day.querySelector('.temp');
-        const tempNightElement = day.querySelector('.temp-night');
-        
-        if (tempElement && tempNightElement) {
-            const dayTemp = Math.floor(Math.random() * 10) + 25;
-            const nightTemp = dayTemp - 8;
-            
-            tempElement.textContent = `${dayTemp}°`;
-            tempNightElement.textContent = `${nightTemp}°`;
-        }
-    });
-}
-
-// Update coverage info
-function updateCoverageInfo() {
-    const coverageItems = document.querySelectorAll('.coverage-item');
-    coverageItems.forEach(item => {
-        const amountElement = item.querySelector('span:last-child');
-        if (amountElement && !amountElement.textContent.includes('Total')) {
-            const amount = Math.floor(Math.random() * 10000) + 15000;
-            amountElement.textContent = `₹${amount.toLocaleString()}`;
-        }
-    });
-}
-
-// Update claims status
-function updateClaimsStatus() {
-    const claimItems = document.querySelectorAll('.claim-item');
-    claimItems.forEach(item => {
-        const statusElement = item.querySelector('.claim-status');
-        if (statusElement) {
-            const statuses = ['pending', 'approved', 'rejected'];
-            const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
-            
-            statusElement.className = `claim-status ${randomStatus}`;
-            statusElement.textContent = randomStatus.charAt(0).toUpperCase() + randomStatus.slice(1);
-        }
-    });
-}
-
-// Initialize real-time updates
-function initializeRealTimeUpdates() {
-    // Simulate real-time data updates
-    setInterval(() => {
-        updateWeatherSummary();
-        updateMarketPrices();
-    }, 60000); // Update every minute
-}
-
-// Simulate real-time data
-function simulateRealTimeData() {
-    // Simulate weather updates
-    setInterval(() => {
-        const weatherSummary = document.querySelector('.weather-summary');
-        if (weatherSummary) {
-            const temperature = Math.floor(Math.random() * 10) + 25;
-            weatherSummary.querySelector('span').textContent = `${temperature}°C, Partly Cloudy`;
-        }
-    }, 30000);
-    
-    // Simulate market price updates
+// Market updates
+function initializeMarketUpdates() {
+    // Simulate real-time market updates
     setInterval(() => {
         const priceElements = document.querySelectorAll('.current-price');
         priceElements.forEach(element => {
-            const currentPrice = parseInt(element.textContent.replace(/[^\d]/g, ''));
-            const change = Math.floor(Math.random() * 100) - 50;
+            const currentPrice = parseInt(element.textContent.replace('₹', ''));
+            const change = Math.floor(Math.random() * 100) - 50; // Random change between -50 and +50
             const newPrice = currentPrice + change;
+            
             element.textContent = `₹${newPrice}`;
+            
+            // Animate price change
+            if (typeof gsap !== 'undefined') {
+                gsap.to(element, {
+                    scale: 1.05,
+                    color: change > 0 ? '#10B981' : '#EF4444',
+                    duration: 0.3,
+                    yoyo: true,
+                    repeat: 1
+                });
+            }
         });
-    }, 45000);
+    }, 60000); // Update every minute
 }
 
-// Refresh data periodically
-function refreshData() {
-    if (currentSection === 'dashboard') {
-        loadDashboardData();
-    } else if (currentSection === 'market') {
-        loadMarketData();
-    } else if (currentSection === 'weather') {
-        loadWeatherData();
-    }
-}
-
-// Load notifications
-function loadNotifications() {
-    notifications = [
-        {
-            type: 'urgent',
-            title: 'Pest Alert',
-            message: 'Wheat rust detected in your field',
-            time: '2 hours ago',
-            icon: 'fas fa-exclamation-triangle'
-        },
-        {
-            type: 'normal',
-            title: 'Weather Update',
-            message: 'Rain expected tomorrow',
-            time: '1 day ago',
-            icon: 'fas fa-cloud-rain'
-        },
-        {
-            type: 'normal',
-            title: 'Price Alert',
-            message: 'Wheat prices up by ₹150',
-            time: '2 days ago',
-            icon: 'fas fa-chart-line'
-        }
-    ];
-    
-    updateNotificationBadge();
-}
-
-// Update notification badge
-function updateNotificationBadge() {
-    const badge = document.querySelector('.notification-badge');
-    if (badge) {
-        const urgentCount = notifications.filter(n => n.type === 'urgent').length;
-        badge.textContent = urgentCount > 0 ? urgentCount : notifications.length;
-        badge.style.display = urgentCount > 0 ? 'block' : 'none';
-    }
-}
-
-// Load chat messages
-function loadChatMessages() {
-    chatMessages = [
-        {
-            sender: 'bot',
-            message: 'Namaste! How can I help you today?',
-            timestamp: new Date()
-        }
-    ];
-}
-
-// Hide loading screen
-function hideLoadingScreen() {
-    if (loadingScreen) {
-        loadingScreen.classList.add('hidden');
-        setTimeout(() => {
-            loadingScreen.style.display = 'none';
-        }, 500);
-    }
+// Crop updates
+function initializeCropUpdates() {
+    // Simulate real-time crop status updates
+    setInterval(() => {
+        const progressBars = document.querySelectorAll('.progress-fill');
+        progressBars.forEach(bar => {
+            const currentWidth = parseInt(bar.style.width) || 0;
+            const increment = Math.random() * 2; // Random increment up to 2%
+            
+            if (currentWidth < 100) {
+                const newWidth = Math.min(currentWidth + increment, 100);
+                bar.style.width = newWidth + '%';
+                
+                // Update progress text
+                const progressText = bar.parentElement.nextElementSibling;
+                if (progressText) {
+                    progressText.textContent = Math.round(newWidth) + '% ' + (newWidth >= 100 ? 'Ready' : 'Growth');
+                }
+            }
+        });
+    }, 120000); // Update every 2 minutes
 }
 
 // Utility functions
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification-toast ${type}`;
-    notification.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-        <span>${message}</span>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.classList.add('show');
-    }, 100);
-    
-    setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
-    }, 3000);
+function formatCurrency(amount) {
+    return new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR'
+    }).format(amount);
 }
 
-// Error handling
-window.addEventListener('error', function(e) {
-    console.error('Application error:', e.error);
-    showNotification('An error occurred. Please try again.', 'error');
-});
+function formatDate(date) {
+    return new Intl.DateTimeFormat('en-IN', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    }).format(date);
+}
 
-// Export functions for use in other modules
-window.SoilSense = {
-    switchSection,
-    showNotification,
-    addChatMessage,
-    updateNotificationBadge
+// Export functions for global use
+window.SoilSenseApp = {
+    sendMessage,
+    addMessageToChat,
+    formatCurrency,
+    formatDate
 }; 

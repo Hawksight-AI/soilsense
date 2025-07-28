@@ -11,44 +11,68 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
     
-    <!-- Fonts -->
+    <!-- Latest Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Latest Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
-    <!-- Styles -->
+    <!-- Latest Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/MotionPathPlugin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11.0.5/swiper-bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.0.5/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
+    
+    <!-- Latest Styles -->
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/components.css">
     <link rel="stylesheet" href="styles/animations.css">
     <link rel="stylesheet" href="styles/responsive.css">
+    <link rel="stylesheet" href="styles/modern.css">
 </head>
 <body>
-    <!-- Loading Screen -->
+    <!-- Loading Screen with Lottie -->
     <div id="loading-screen" class="loading-screen">
         <div class="loading-content">
+            <div class="lottie-container" id="lottie-loading"></div>
             <div class="loading-logo">
                 <i class="fas fa-seedling"></i>
                 <span>SoilSense</span>
             </div>
-            <div class="loading-spinner"></div>
-            <p>Loading your farming assistant...</p>
+            <div class="loading-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="loading-progress"></div>
+                </div>
+                <p id="loading-text">Initializing your farming assistant...</p>
+            </div>
         </div>
     </div>
 
+    <!-- Particles Background -->
+    <div id="particles-js" class="particles-background"></div>
+
     <!-- Main App Container -->
     <div id="app" class="app-container">
-        <!-- Header -->
-        <header class="header">
+        <!-- Enhanced Header -->
+        <header class="header glass-effect">
             <div class="header-content">
-                <div class="logo">
-                    <i class="fas fa-seedling"></i>
+                <div class="logo" data-aos="fade-right">
+                    <div class="logo-icon">
+                        <i class="fas fa-seedling"></i>
+                    </div>
                     <span>SoilSense</span>
                 </div>
                 
-                <nav class="nav-menu">
+                <nav class="nav-menu" data-aos="fade-down">
                     <a href="#dashboard" class="nav-link active" data-section="dashboard">
                         <i class="fas fa-home"></i>
                         <span>Dashboard</span>
@@ -71,13 +95,16 @@
                     </a>
                 </nav>
                 
-                <div class="header-actions">
-                    <button class="notification-btn" id="notification-btn">
+                <div class="header-actions" data-aos="fade-left">
+                    <button class="notification-btn glass-effect" id="notification-btn">
                         <i class="fas fa-bell"></i>
-                        <span class="notification-badge">3</span>
+                        <span class="notification-badge pulse">3</span>
                     </button>
-                    <div class="user-profile">
-                        <img src="assets/images/farmer-avatar.jpg" alt="Farmer Profile" class="avatar">
+                    <div class="user-profile glass-effect">
+                        <div class="avatar-container">
+                            <img src="assets/images/farmer-avatar.jpg" alt="Farmer Profile" class="avatar">
+                            <div class="status-indicator online"></div>
+                        </div>
                         <span class="farmer-name">Rajesh Kumar</span>
                         <i class="fas fa-chevron-down"></i>
                     </div>
@@ -87,95 +114,137 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Dashboard Section -->
+            <!-- Enhanced Dashboard Section -->
             <section id="dashboard" class="section active">
                 <div class="dashboard-container">
-                    <!-- Welcome Card -->
-                    <div class="welcome-card">
+                    <!-- Welcome Card with 3D Effects -->
+                    <div class="welcome-card glass-effect" data-aos="fade-up">
                         <div class="welcome-content">
-                            <h1>Namaste, Rajesh! 👋</h1>
-                            <p>Your wheat crop is ready for harvest in 3 days. Current market price: ₹2,450/quintal</p>
-                            <div class="weather-summary">
-                                <i class="fas fa-cloud-sun"></i>
+                            <h1 class="gradient-text">Namaste, Rajesh! 👋</h1>
+                            <p class="welcome-subtitle">Your wheat crop is ready for harvest in 3 days. Current market price: ₹2,450/quintal</p>
+                            <div class="weather-summary glass-effect">
+                                <i class="fas fa-cloud-sun weather-icon"></i>
                                 <span>28°C, Partly Cloudy</span>
                             </div>
                         </div>
                         <div class="welcome-illustration">
-                            <i class="fas fa-wheat-awn"></i>
-                        </div>
-                    </div>
-
-                    <!-- Quick Actions -->
-                    <div class="quick-actions">
-                        <h2>Quick Actions</h2>
-                        <div class="action-grid">
-                            <button class="action-card" data-action="pest-detection">
-                                <i class="fas fa-bug"></i>
-                                <span>Pest Detection</span>
-                            </button>
-                            <button class="action-card" data-action="weather-check">
-                                <i class="fas fa-cloud-rain"></i>
-                                <span>Weather Check</span>
-                            </button>
-                            <button class="action-card" data-action="market-prices">
-                                <i class="fas fa-coins"></i>
-                                <span>Market Prices</span>
-                            </button>
-                            <button class="action-card" data-action="insurance-claim">
-                                <i class="fas fa-file-contract"></i>
-                                <span>Insurance Claim</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Crop Status -->
-                    <div class="crop-status">
-                        <h2>Your Crops</h2>
-                        <div class="crop-grid">
-                            <div class="crop-card">
-                                <div class="crop-header">
+                            <div class="floating-elements">
+                                <div class="floating-icon" data-aos="zoom-in" data-aos-delay="200">
                                     <i class="fas fa-wheat-awn"></i>
-                                    <span>Wheat</span>
-                                    <span class="crop-status-badge healthy">Healthy</span>
+                                </div>
+                                <div class="floating-icon" data-aos="zoom-in" data-aos-delay="400">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="floating-icon" data-aos="zoom-in" data-aos-delay="600">
+                                    <i class="fas fa-cloud-rain"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Enhanced Quick Actions -->
+                    <div class="quick-actions" data-aos="fade-up" data-aos-delay="200">
+                        <h2 class="section-title">Quick Actions</h2>
+                        <div class="action-grid">
+                            <button class="action-card glass-effect hover-lift" data-action="pest-detection" data-aos="zoom-in" data-aos-delay="100">
+                                <div class="action-icon">
+                                    <i class="fas fa-bug"></i>
+                                </div>
+                                <span>Pest Detection</span>
+                                <div class="action-glow"></div>
+                            </button>
+                            <button class="action-card glass-effect hover-lift" data-action="weather-check" data-aos="zoom-in" data-aos-delay="200">
+                                <div class="action-icon">
+                                    <i class="fas fa-cloud-rain"></i>
+                                </div>
+                                <span>Weather Check</span>
+                                <div class="action-glow"></div>
+                            </button>
+                            <button class="action-card glass-effect hover-lift" data-action="market-prices" data-aos="zoom-in" data-aos-delay="300">
+                                <div class="action-icon">
+                                    <i class="fas fa-coins"></i>
+                                </div>
+                                <span>Market Prices</span>
+                                <div class="action-glow"></div>
+                            </button>
+                            <button class="action-card glass-effect hover-lift" data-action="insurance-claim" data-aos="zoom-in" data-aos-delay="400">
+                                <div class="action-icon">
+                                    <i class="fas fa-file-contract"></i>
+                                </div>
+                                <span>Insurance Claim</span>
+                                <div class="action-glow"></div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Enhanced Crop Status -->
+                    <div class="crop-status" data-aos="fade-up" data-aos-delay="300">
+                        <h2 class="section-title">Your Crops</h2>
+                        <div class="crop-grid">
+                            <div class="crop-card glass-effect hover-lift" data-aos="slide-up" data-aos-delay="100">
+                                <div class="crop-header">
+                                    <div class="crop-icon">
+                                        <i class="fas fa-wheat-awn"></i>
+                                    </div>
+                                    <span class="crop-name">Wheat</span>
+                                    <span class="crop-status-badge healthy pulse">Healthy</span>
                                 </div>
                                 <div class="crop-progress">
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 85%"></div>
+                                    <div class="progress-container">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 85%"></div>
+                                        </div>
+                                        <span class="progress-text">85% Ready</span>
                                     </div>
-                                    <span>85% Ready</span>
                                 </div>
                                 <div class="crop-details">
-                                    <p>Area: 2.5 acres</p>
-                                    <p>Expected yield: 12.5 quintals</p>
+                                    <div class="detail-item">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Area: 2.5 acres</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-chart-line"></i>
+                                        <span>Expected yield: 12.5 quintals</span>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div class="crop-card">
+                            <div class="crop-card glass-effect hover-lift" data-aos="slide-up" data-aos-delay="200">
                                 <div class="crop-header">
-                                    <i class="fas fa-seedling"></i>
-                                    <span>Mustard</span>
-                                    <span class="crop-status-badge warning">Needs Care</span>
+                                    <div class="crop-icon">
+                                        <i class="fas fa-seedling"></i>
+                                    </div>
+                                    <span class="crop-name">Mustard</span>
+                                    <span class="crop-status-badge warning pulse">Needs Care</span>
                                 </div>
                                 <div class="crop-progress">
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 45%"></div>
+                                    <div class="progress-container">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 45%"></div>
+                                        </div>
+                                        <span class="progress-text">45% Growth</span>
                                     </div>
-                                    <span>45% Growth</span>
                                 </div>
                                 <div class="crop-details">
-                                    <p>Area: 1.8 acres</p>
-                                    <p>Expected yield: 8.2 quintals</p>
+                                    <div class="detail-item">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Area: 1.8 acres</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-chart-line"></i>
+                                        <span>Expected yield: 8.2 quintals</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Recent Advisories -->
-                    <div class="recent-advisories">
-                        <h2>Recent Advisories</h2>
+                    <!-- Enhanced Recent Advisories -->
+                    <div class="recent-advisories" data-aos="fade-up" data-aos-delay="400">
+                        <h2 class="section-title">Recent Advisories</h2>
                         <div class="advisory-list">
-                            <div class="advisory-card urgent">
-                                <div class="advisory-icon">
+                            <div class="advisory-card urgent glass-effect hover-lift" data-aos="slide-right" data-aos-delay="100">
+                                <div class="advisory-icon urgent">
                                     <i class="fas fa-exclamation-triangle"></i>
                                 </div>
                                 <div class="advisory-content">
@@ -183,9 +252,10 @@
                                     <p>Spray fungicide within 24 hours to prevent spread</p>
                                     <span class="advisory-time">2 hours ago</span>
                                 </div>
+                                <div class="advisory-priority urgent"></div>
                             </div>
                             
-                            <div class="advisory-card">
+                            <div class="advisory-card glass-effect hover-lift" data-aos="slide-right" data-aos-delay="200">
                                 <div class="advisory-icon">
                                     <i class="fas fa-cloud-rain"></i>
                                 </div>
@@ -194,53 +264,69 @@
                                     <p>Water your mustard crop tomorrow morning</p>
                                     <span class="advisory-time">1 day ago</span>
                                 </div>
+                                <div class="advisory-priority"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Advisory Section -->
+            <!-- Enhanced Advisory Section -->
             <section id="advisory" class="section">
                 <div class="advisory-container">
-                    <div class="advisory-header">
-                        <h1>Crop Advisory</h1>
-                        <button class="upload-btn" id="upload-image-btn">
+                    <div class="advisory-header" data-aos="fade-down">
+                        <h1 class="section-title gradient-text">Crop Advisory</h1>
+                        <button class="upload-btn glass-effect hover-lift" id="upload-image-btn">
                             <i class="fas fa-camera"></i>
                             Upload Image
                         </button>
                     </div>
 
-                    <div class="advisory-tabs">
-                        <button class="tab-btn active" data-tab="pest">Pest Detection</button>
-                        <button class="tab-btn" data-tab="disease">Disease Analysis</button>
-                        <button class="tab-btn" data-tab="nutrition">Nutrition Check</button>
-                        <button class="tab-btn" data-tab="irrigation">Irrigation</button>
+                    <div class="advisory-tabs glass-effect" data-aos="fade-up">
+                        <button class="tab-btn active" data-tab="pest">
+                            <i class="fas fa-bug"></i>
+                            <span>Pest Detection</span>
+                        </button>
+                        <button class="tab-btn" data-tab="disease">
+                            <i class="fas fa-virus"></i>
+                            <span>Disease Analysis</span>
+                        </button>
+                        <button class="tab-btn" data-tab="nutrition">
+                            <i class="fas fa-seedling"></i>
+                            <span>Nutrition Check</span>
+                        </button>
+                        <button class="tab-btn" data-tab="irrigation">
+                            <i class="fas fa-tint"></i>
+                            <span>Irrigation</span>
+                        </button>
                     </div>
 
-                    <div class="advisory-content">
-                        <div class="upload-area" id="upload-area">
+                    <div class="advisory-content" data-aos="fade-up" data-aos-delay="200">
+                        <div class="upload-area glass-effect" id="upload-area">
                             <div class="upload-placeholder">
-                                <i class="fas fa-cloud-upload-alt"></i>
+                                <div class="upload-icon">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                </div>
                                 <h3>Upload Crop Image</h3>
                                 <p>Take a photo of your crop for instant analysis</p>
-                                <button class="upload-btn-secondary">Choose Image</button>
+                                <button class="upload-btn-secondary glass-effect hover-lift">Choose Image</button>
+                                <div class="upload-drag-text">or drag and drop here</div>
                             </div>
                         </div>
 
-                        <div class="analysis-results" id="analysis-results" style="display: none;">
+                        <div class="analysis-results glass-effect" id="analysis-results" style="display: none;">
                             <div class="result-card">
                                 <div class="result-header">
                                     <h3>Analysis Results</h3>
                                     <span class="confidence">95% Confidence</span>
                                 </div>
                                 <div class="result-content">
-                                    <div class="detection-item">
+                                    <div class="detection-item glass-effect">
                                         <i class="fas fa-bug"></i>
                                         <span>Wheat Rust Detected</span>
                                         <span class="severity high">High Severity</span>
                                     </div>
-                                    <div class="recommendation">
+                                    <div class="recommendation glass-effect">
                                         <h4>Recommendation:</h4>
                                         <p>Apply fungicide (Mancozeb 75% WP) at 2.5 kg/ha. Repeat after 15 days.</p>
                                     </div>
@@ -251,12 +337,12 @@
                 </div>
             </section>
 
-            <!-- Market Section -->
+            <!-- Enhanced Market Section -->
             <section id="market" class="section">
                 <div class="market-container">
-                    <div class="market-header">
-                        <h1>Market Intelligence</h1>
-                        <div class="market-filters">
+                    <div class="market-header" data-aos="fade-down">
+                        <h1 class="section-title gradient-text">Market Intelligence</h1>
+                        <div class="market-filters glass-effect">
                             <select class="market-select">
                                 <option>All Crops</option>
                                 <option>Wheat</option>
@@ -272,11 +358,11 @@
                         </div>
                     </div>
 
-                    <div class="market-overview">
-                        <div class="market-card">
+                    <div class="market-overview" data-aos="fade-up">
+                        <div class="market-card glass-effect hover-lift" data-aos="zoom-in" data-aos-delay="100">
                             <div class="market-card-header">
                                 <h3>Wheat Prices</h3>
-                                <span class="trend up">+₹150</span>
+                                <span class="trend up pulse">+₹150</span>
                             </div>
                             <div class="price-info">
                                 <span class="current-price">₹2,450</span>
@@ -287,10 +373,10 @@
                             </div>
                         </div>
 
-                        <div class="market-card">
+                        <div class="market-card glass-effect hover-lift" data-aos="zoom-in" data-aos-delay="200">
                             <div class="market-card-header">
                                 <h3>Mustard Prices</h3>
-                                <span class="trend down">-₹75</span>
+                                <span class="trend down pulse">-₹75</span>
                             </div>
                             <div class="price-info">
                                 <span class="current-price">₹5,200</span>
@@ -302,10 +388,10 @@
                         </div>
                     </div>
 
-                    <div class="market-recommendations">
-                        <h2>Market Recommendations</h2>
+                    <div class="market-recommendations" data-aos="fade-up" data-aos-delay="300">
+                        <h2 class="section-title">Market Recommendations</h2>
                         <div class="recommendation-cards">
-                            <div class="recommendation-card">
+                            <div class="recommendation-card glass-effect hover-lift" data-aos="slide-up" data-aos-delay="100">
                                 <div class="recommendation-icon">
                                     <i class="fas fa-arrow-up"></i>
                                 </div>
@@ -315,7 +401,7 @@
                                 </div>
                             </div>
                             
-                            <div class="recommendation-card">
+                            <div class="recommendation-card glass-effect hover-lift" data-aos="slide-up" data-aos-delay="200">
                                 <div class="recommendation-icon">
                                     <i class="fas fa-arrow-down"></i>
                                 </div>
@@ -329,18 +415,18 @@
                 </div>
             </section>
 
-            <!-- Weather Section -->
+            <!-- Enhanced Weather Section -->
             <section id="weather" class="section">
                 <div class="weather-container">
-                    <div class="weather-header">
-                        <h1>Weather Forecast</h1>
-                        <div class="location-selector">
+                    <div class="weather-header" data-aos="fade-down">
+                        <h1 class="section-title gradient-text">Weather Forecast</h1>
+                        <div class="location-selector glass-effect">
                             <i class="fas fa-map-marker-alt"></i>
                             <span>Delhi, India</span>
                         </div>
                     </div>
 
-                    <div class="current-weather">
+                    <div class="current-weather glass-effect" data-aos="fade-up">
                         <div class="weather-main">
                             <div class="weather-icon">
                                 <i class="fas fa-cloud-sun"></i>
@@ -352,61 +438,61 @@
                             </div>
                         </div>
                         <div class="weather-details">
-                            <div class="weather-detail">
+                            <div class="weather-detail glass-effect">
                                 <i class="fas fa-tint"></i>
                                 <span>Humidity: 65%</span>
                             </div>
-                            <div class="weather-detail">
+                            <div class="weather-detail glass-effect">
                                 <i class="fas fa-wind"></i>
                                 <span>Wind: 12 km/h</span>
                             </div>
-                            <div class="weather-detail">
+                            <div class="weather-detail glass-effect">
                                 <i class="fas fa-eye"></i>
                                 <span>Visibility: 10 km</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="weather-forecast">
-                        <h2>7-Day Forecast</h2>
+                    <div class="weather-forecast" data-aos="fade-up" data-aos-delay="200">
+                        <h2 class="section-title">7-Day Forecast</h2>
                         <div class="forecast-grid">
-                            <div class="forecast-day">
+                            <div class="forecast-day glass-effect hover-lift" data-aos="zoom-in" data-aos-delay="100">
                                 <span class="day">Today</span>
                                 <i class="fas fa-sun"></i>
                                 <span class="temp">28°</span>
                                 <span class="temp-night">22°</span>
                             </div>
-                            <div class="forecast-day">
+                            <div class="forecast-day glass-effect hover-lift" data-aos="zoom-in" data-aos-delay="200">
                                 <span class="day">Tue</span>
                                 <i class="fas fa-cloud-sun"></i>
                                 <span class="temp">26°</span>
                                 <span class="temp-night">20°</span>
                             </div>
-                            <div class="forecast-day">
+                            <div class="forecast-day glass-effect hover-lift" data-aos="zoom-in" data-aos-delay="300">
                                 <span class="day">Wed</span>
                                 <i class="fas fa-cloud-rain"></i>
                                 <span class="temp">24°</span>
                                 <span class="temp-night">18°</span>
                             </div>
-                            <div class="forecast-day">
+                            <div class="forecast-day glass-effect hover-lift" data-aos="zoom-in" data-aos-delay="400">
                                 <span class="day">Thu</span>
                                 <i class="fas fa-cloud"></i>
                                 <span class="temp">25°</span>
                                 <span class="temp-night">19°</span>
                             </div>
-                            <div class="forecast-day">
+                            <div class="forecast-day glass-effect hover-lift" data-aos="zoom-in" data-aos-delay="500">
                                 <span class="day">Fri</span>
                                 <i class="fas fa-sun"></i>
                                 <span class="temp">27°</span>
                                 <span class="temp-night">21°</span>
                             </div>
-                            <div class="forecast-day">
+                            <div class="forecast-day glass-effect hover-lift" data-aos="zoom-in" data-aos-delay="600">
                                 <span class="day">Sat</span>
                                 <i class="fas fa-cloud-sun"></i>
                                 <span class="temp">26°</span>
                                 <span class="temp-night">20°</span>
                             </div>
-                            <div class="forecast-day">
+                            <div class="forecast-day glass-effect hover-lift" data-aos="zoom-in" data-aos-delay="700">
                                 <span class="day">Sun</span>
                                 <i class="fas fa-sun"></i>
                                 <span class="temp">29°</span>
@@ -415,9 +501,9 @@
                         </div>
                     </div>
 
-                    <div class="weather-alerts">
-                        <h2>Weather Alerts</h2>
-                        <div class="alert-card warning">
+                    <div class="weather-alerts" data-aos="fade-up" data-aos-delay="300">
+                        <h2 class="section-title">Weather Alerts</h2>
+                        <div class="alert-card warning glass-effect hover-lift">
                             <i class="fas fa-exclamation-triangle"></i>
                             <div class="alert-content">
                                 <h3>Light Rain Expected</h3>
@@ -428,77 +514,77 @@
                 </div>
             </section>
 
-            <!-- Insurance Section -->
+            <!-- Enhanced Insurance Section -->
             <section id="insurance" class="section">
                 <div class="insurance-container">
-                    <div class="insurance-header">
-                        <h1>Crop Insurance</h1>
-                        <button class="claim-btn">
+                    <div class="insurance-header" data-aos="fade-down">
+                        <h1 class="section-title gradient-text">Crop Insurance</h1>
+                        <button class="claim-btn glass-effect hover-lift">
                             <i class="fas fa-plus"></i>
                             New Claim
                         </button>
                     </div>
 
-                    <div class="insurance-overview">
-                        <div class="insurance-card">
+                    <div class="insurance-overview" data-aos="fade-up">
+                        <div class="insurance-card glass-effect hover-lift" data-aos="zoom-in" data-aos-delay="100">
                             <div class="insurance-header">
                                 <h3>PMFBY Coverage</h3>
-                                <span class="status active">Active</span>
+                                <span class="status active pulse">Active</span>
                             </div>
                             <div class="coverage-details">
-                                <div class="coverage-item">
+                                <div class="coverage-item glass-effect">
                                     <span>Wheat</span>
                                     <span>₹25,000</span>
                                 </div>
-                                <div class="coverage-item">
+                                <div class="coverage-item glass-effect">
                                     <span>Mustard</span>
                                     <span>₹18,000</span>
                                 </div>
-                                <div class="coverage-item total">
+                                <div class="coverage-item total glass-effect">
                                     <span>Total Coverage</span>
                                     <span>₹43,000</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="insurance-card">
+                        <div class="insurance-card glass-effect hover-lift" data-aos="zoom-in" data-aos-delay="200">
                             <div class="insurance-header">
                                 <h3>Recent Claims</h3>
                             </div>
                             <div class="claims-list">
-                                <div class="claim-item">
+                                <div class="claim-item glass-effect">
                                     <div class="claim-info">
                                         <h4>Wheat Damage Claim</h4>
                                         <p>Due to excessive rainfall</p>
                                         <span class="claim-date">15 Jan 2024</span>
                                     </div>
-                                    <span class="claim-status pending">Pending</span>
+                                    <span class="claim-status pending pulse">Pending</span>
                                 </div>
                                 
-                                <div class="claim-item">
+                                <div class="claim-item glass-effect">
                                     <div class="claim-info">
                                         <h4>Mustard Pest Damage</h4>
                                         <p>Pest infestation claim</p>
                                         <span class="claim-date">10 Jan 2024</span>
                                     </div>
-                                    <span class="claim-status approved">Approved</span>
+                                    <span class="claim-status approved pulse">Approved</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="insurance-actions">
-                        <h2>Quick Actions</h2>
+                    <div class="insurance-actions" data-aos="fade-up" data-aos-delay="300">
+                        <h2 class="section-title">Quick Actions</h2>
                         <div class="action-buttons">
-                            <button class="action-btn">
+                            <button class="action-btn glass-effect hover-lift" data-aos="zoom-in" data-aos-delay="100">
                                 <i class="fas fa-file-alt"></i>
                                 <span>Check Eligibility</span>
                             </button>
-                            <button class="action-btn">
+                            <button class="action-btn glass-effect hover-lift" data-aos="zoom-in" data-aos-delay="200">
                                 <i class="fas fa-upload"></i>
                                 <span>Upload Documents</span>
                             </button>
-                            <button class="action-btn">
+                            <button class="action-btn glass-effect hover-lift" data-aos="zoom-in" data-aos-delay="300">
                                 <i class="fas fa-phone"></i>
                                 <span>Call Support</span>
                             </button>
@@ -508,15 +594,15 @@
             </section>
         </main>
 
-        <!-- Chat Widget -->
-        <div class="chat-widget" id="chat-widget">
+        <!-- Enhanced Chat Widget -->
+        <div class="chat-widget glass-effect" id="chat-widget">
             <div class="chat-header">
                 <div class="chat-avatar">
                     <i class="fas fa-robot"></i>
                 </div>
                 <div class="chat-info">
                     <h4>SoilSense AI</h4>
-                    <span class="status online">Online</span>
+                    <span class="status online pulse">Online</span>
                 </div>
                 <button class="chat-toggle" id="chat-toggle">
                     <i class="fas fa-comments"></i>
@@ -542,8 +628,8 @@
             </div>
         </div>
 
-        <!-- Notification Panel -->
-        <div class="notification-panel" id="notification-panel">
+        <!-- Enhanced Notification Panel -->
+        <div class="notification-panel glass-effect" id="notification-panel">
             <div class="notification-header">
                 <h3>Notifications</h3>
                 <button class="close-notifications" id="close-notifications">
@@ -551,7 +637,7 @@
                 </button>
             </div>
             <div class="notification-list">
-                <div class="notification-item urgent">
+                <div class="notification-item urgent glass-effect hover-lift">
                     <i class="fas fa-exclamation-triangle"></i>
                     <div class="notification-content">
                         <h4>Pest Alert</h4>
@@ -560,7 +646,7 @@
                     </div>
                 </div>
                 
-                <div class="notification-item">
+                <div class="notification-item glass-effect hover-lift">
                     <i class="fas fa-cloud-rain"></i>
                     <div class="notification-content">
                         <h4>Weather Update</h4>
@@ -569,7 +655,7 @@
                     </div>
                 </div>
                 
-                <div class="notification-item">
+                <div class="notification-item glass-effect hover-lift">
                     <i class="fas fa-chart-line"></i>
                     <div class="notification-content">
                         <h4>Price Alert</h4>
@@ -581,11 +667,11 @@
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Latest Scripts -->
     <script src="js/main.js"></script>
     <script src="js/animations.js"></script>
     <script src="js/charts.js"></script>
     <script src="js/chat.js"></script>
+    <script src="js/modern.js"></script>
 </body>
 </html> 
