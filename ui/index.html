@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SoilSense - AI-powered farming platform for Indian farmers">
+    <meta name="theme-color" content="#10B981">
+    <title>SoilSense - Smart Farming Platform</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/animations.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <i class="fas fa-seedling"></i>
+                <span>SoilSense</span>
+            </div>
+            <div class="loading-spinner"></div>
+            <p>Loading your farming assistant...</p>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app" class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-seedling"></i>
+                    <span>SoilSense</span>
+                </div>
+                
+                <nav class="nav-menu">
+                    <a href="#dashboard" class="nav-link active" data-section="dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#advisory" class="nav-link" data-section="advisory">
+                        <i class="fas fa-leaf"></i>
+                        <span>Advisory</span>
+                    </a>
+                    <a href="#market" class="nav-link" data-section="market">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Market</span>
+                    </a>
+                    <a href="#weather" class="nav-link" data-section="weather">
+                        <i class="fas fa-cloud-sun"></i>
+                        <span>Weather</span>
+                    </a>
+                    <a href="#insurance" class="nav-link" data-section="insurance">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Insurance</span>
+                    </a>
+                </nav>
+                
+                <div class="header-actions">
+                    <button class="notification-btn" id="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="user-profile">
+                        <img src="assets/images/farmer-avatar.jpg" alt="Farmer Profile" class="avatar">
+                        <span class="farmer-name">Rajesh Kumar</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <div class="dashboard-container">
+                    <!-- Welcome Card -->
+                    <div class="welcome-card">
+                        <div class="welcome-content">
+                            <h1>Namaste, Rajesh! 👋</h1>
+                            <p>Your wheat crop is ready for harvest in 3 days. Current market price: ₹2,450/quintal</p>
+                            <div class="weather-summary">
+                                <i class="fas fa-cloud-sun"></i>
+                                <span>28°C, Partly Cloudy</span>
+                            </div>
+                        </div>
+                        <div class="welcome-illustration">
+                            <i class="fas fa-wheat-awn"></i>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="quick-actions">
+                        <h2>Quick Actions</h2>
+                        <div class="action-grid">
+                            <button class="action-card" data-action="pest-detection">
+                                <i class="fas fa-bug"></i>
+                                <span>Pest Detection</span>
+                            </button>
+                            <button class="action-card" data-action="weather-check">
+                                <i class="fas fa-cloud-rain"></i>
+                                <span>Weather Check</span>
+                            </button>
+                            <button class="action-card" data-action="market-prices">
+                                <i class="fas fa-coins"></i>
+                                <span>Market Prices</span>
+                            </button>
+                            <button class="action-card" data-action="insurance-claim">
+                                <i class="fas fa-file-contract"></i>
+                                <span>Insurance Claim</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Crop Status -->
+                    <div class="crop-status">
+                        <h2>Your Crops</h2>
+                        <div class="crop-grid">
+                            <div class="crop-card">
+                                <div class="crop-header">
+                                    <i class="fas fa-wheat-awn"></i>
+                                    <span>Wheat</span>
+                                    <span class="crop-status-badge healthy">Healthy</span>
+                                </div>
+                                <div class="crop-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 85%"></div>
+                                    </div>
+                                    <span>85% Ready</span>
+                                </div>
+                                <div class="crop-details">
+                                    <p>Area: 2.5 acres</p>
+                                    <p>Expected yield: 12.5 quintals</p>
+                                </div>
+                            </div>
+                            
+                            <div class="crop-card">
+                                <div class="crop-header">
+                                    <i class="fas fa-seedling"></i>
+                                    <span>Mustard</span>
+                                    <span class="crop-status-badge warning">Needs Care</span>
+                                </div>
+                                <div class="crop-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 45%"></div>
+                                    </div>
+                                    <span>45% Growth</span>
+                                </div>
+                                <div class="crop-details">
+                                    <p>Area: 1.8 acres</p>
+                                    <p>Expected yield: 8.2 quintals</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Advisories -->
+                    <div class="recent-advisories">
+                        <h2>Recent Advisories</h2>
+                        <div class="advisory-list">
+                            <div class="advisory-card urgent">
+                                <div class="advisory-icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="advisory-content">
+                                    <h3>Pest Alert: Wheat Rust Detected</h3>
+                                    <p>Spray fungicide within 24 hours to prevent spread</p>
+                                    <span class="advisory-time">2 hours ago</span>
+                                </div>
+                            </div>
+                            
+                            <div class="advisory-card">
+                                <div class="advisory-icon">
+                                    <i class="fas fa-cloud-rain"></i>
+                                </div>
+                                <div class="advisory-content">
+                                    <h3>Irrigation Reminder</h3>
+                                    <p>Water your mustard crop tomorrow morning</p>
+                                    <span class="advisory-time">1 day ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Advisory Section -->
+            <section id="advisory" class="section">
+                <div class="advisory-container">
+                    <div class="advisory-header">
+                        <h1>Crop Advisory</h1>
+                        <button class="upload-btn" id="upload-image-btn">
+                            <i class="fas fa-camera"></i>
+                            Upload Image
+                        </button>
+                    </div>
+
+                    <div class="advisory-tabs">
+                        <button class="tab-btn active" data-tab="pest">Pest Detection</button>
+                        <button class="tab-btn" data-tab="disease">Disease Analysis</button>
+                        <button class="tab-btn" data-tab="nutrition">Nutrition Check</button>
+                        <button class="tab-btn" data-tab="irrigation">Irrigation</button>
+                    </div>
+
+                    <div class="advisory-content">
+                        <div class="upload-area" id="upload-area">
+                            <div class="upload-placeholder">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <h3>Upload Crop Image</h3>
+                                <p>Take a photo of your crop for instant analysis</p>
+                                <button class="upload-btn-secondary">Choose Image</button>
+                            </div>
+                        </div>
+
+                        <div class="analysis-results" id="analysis-results" style="display: none;">
+                            <div class="result-card">
+                                <div class="result-header">
+                                    <h3>Analysis Results</h3>
+                                    <span class="confidence">95% Confidence</span>
+                                </div>
+                                <div class="result-content">
+                                    <div class="detection-item">
+                                        <i class="fas fa-bug"></i>
+                                        <span>Wheat Rust Detected</span>
+                                        <span class="severity high">High Severity</span>
+                                    </div>
+                                    <div class="recommendation">
+                                        <h4>Recommendation:</h4>
+                                        <p>Apply fungicide (Mancozeb 75% WP) at 2.5 kg/ha. Repeat after 15 days.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Market Section -->
+            <section id="market" class="section">
+                <div class="market-container">
+                    <div class="market-header">
+                        <h1>Market Intelligence</h1>
+                        <div class="market-filters">
+                            <select class="market-select">
+                                <option>All Crops</option>
+                                <option>Wheat</option>
+                                <option>Mustard</option>
+                                <option>Rice</option>
+                            </select>
+                            <select class="market-select">
+                                <option>All Mandis</option>
+                                <option>Delhi</option>
+                                <option>Mumbai</option>
+                                <option>Kolkata</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="market-overview">
+                        <div class="market-card">
+                            <div class="market-card-header">
+                                <h3>Wheat Prices</h3>
+                                <span class="trend up">+₹150</span>
+                            </div>
+                            <div class="price-info">
+                                <span class="current-price">₹2,450</span>
+                                <span class="price-unit">per quintal</span>
+                            </div>
+                            <div class="market-chart">
+                                <canvas id="wheat-chart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="market-card">
+                            <div class="market-card-header">
+                                <h3>Mustard Prices</h3>
+                                <span class="trend down">-₹75</span>
+                            </div>
+                            <div class="price-info">
+                                <span class="current-price">₹5,200</span>
+                                <span class="price-unit">per quintal</span>
+                            </div>
+                            <div class="market-chart">
+                                <canvas id="mustard-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="market-recommendations">
+                        <h2>Market Recommendations</h2>
+                        <div class="recommendation-cards">
+                            <div class="recommendation-card">
+                                <div class="recommendation-icon">
+                                    <i class="fas fa-arrow-up"></i>
+                                </div>
+                                <div class="recommendation-content">
+                                    <h3>Hold Wheat</h3>
+                                    <p>Prices expected to rise by 8% in next 2 weeks</p>
+                                </div>
+                            </div>
+                            
+                            <div class="recommendation-card">
+                                <div class="recommendation-icon">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                                <div class="recommendation-content">
+                                    <h3>Sell Mustard Soon</h3>
+                                    <p>Prices may decline by 5% in coming days</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Weather Section -->
+            <section id="weather" class="section">
+                <div class="weather-container">
+                    <div class="weather-header">
+                        <h1>Weather Forecast</h1>
+                        <div class="location-selector">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Delhi, India</span>
+                        </div>
+                    </div>
+
+                    <div class="current-weather">
+                        <div class="weather-main">
+                            <div class="weather-icon">
+                                <i class="fas fa-cloud-sun"></i>
+                            </div>
+                            <div class="weather-info">
+                                <h2>28°C</h2>
+                                <p>Partly Cloudy</p>
+                                <span>Feels like 30°C</span>
+                            </div>
+                        </div>
+                        <div class="weather-details">
+                            <div class="weather-detail">
+                                <i class="fas fa-tint"></i>
+                                <span>Humidity: 65%</span>
+                            </div>
+                            <div class="weather-detail">
+                                <i class="fas fa-wind"></i>
+                                <span>Wind: 12 km/h</span>
+                            </div>
+                            <div class="weather-detail">
+                                <i class="fas fa-eye"></i>
+                                <span>Visibility: 10 km</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="weather-forecast">
+                        <h2>7-Day Forecast</h2>
+                        <div class="forecast-grid">
+                            <div class="forecast-day">
+                                <span class="day">Today</span>
+                                <i class="fas fa-sun"></i>
+                                <span class="temp">28°</span>
+                                <span class="temp-night">22°</span>
+                            </div>
+                            <div class="forecast-day">
+                                <span class="day">Tue</span>
+                                <i class="fas fa-cloud-sun"></i>
+                                <span class="temp">26°</span>
+                                <span class="temp-night">20°</span>
+                            </div>
+                            <div class="forecast-day">
+                                <span class="day">Wed</span>
+                                <i class="fas fa-cloud-rain"></i>
+                                <span class="temp">24°</span>
+                                <span class="temp-night">18°</span>
+                            </div>
+                            <div class="forecast-day">
+                                <span class="day">Thu</span>
+                                <i class="fas fa-cloud"></i>
+                                <span class="temp">25°</span>
+                                <span class="temp-night">19°</span>
+                            </div>
+                            <div class="forecast-day">
+                                <span class="day">Fri</span>
+                                <i class="fas fa-sun"></i>
+                                <span class="temp">27°</span>
+                                <span class="temp-night">21°</span>
+                            </div>
+                            <div class="forecast-day">
+                                <span class="day">Sat</span>
+                                <i class="fas fa-cloud-sun"></i>
+                                <span class="temp">26°</span>
+                                <span class="temp-night">20°</span>
+                            </div>
+                            <div class="forecast-day">
+                                <span class="day">Sun</span>
+                                <i class="fas fa-sun"></i>
+                                <span class="temp">29°</span>
+                                <span class="temp-night">23°</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="weather-alerts">
+                        <h2>Weather Alerts</h2>
+                        <div class="alert-card warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div class="alert-content">
+                                <h3>Light Rain Expected</h3>
+                                <p>Light rain expected on Wednesday. Plan irrigation accordingly.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Insurance Section -->
+            <section id="insurance" class="section">
+                <div class="insurance-container">
+                    <div class="insurance-header">
+                        <h1>Crop Insurance</h1>
+                        <button class="claim-btn">
+                            <i class="fas fa-plus"></i>
+                            New Claim
+                        </button>
+                    </div>
+
+                    <div class="insurance-overview">
+                        <div class="insurance-card">
+                            <div class="insurance-header">
+                                <h3>PMFBY Coverage</h3>
+                                <span class="status active">Active</span>
+                            </div>
+                            <div class="coverage-details">
+                                <div class="coverage-item">
+                                    <span>Wheat</span>
+                                    <span>₹25,000</span>
+                                </div>
+                                <div class="coverage-item">
+                                    <span>Mustard</span>
+                                    <span>₹18,000</span>
+                                </div>
+                                <div class="coverage-item total">
+                                    <span>Total Coverage</span>
+                                    <span>₹43,000</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="insurance-card">
+                            <div class="insurance-header">
+                                <h3>Recent Claims</h3>
+                            </div>
+                            <div class="claims-list">
+                                <div class="claim-item">
+                                    <div class="claim-info">
+                                        <h4>Wheat Damage Claim</h4>
+                                        <p>Due to excessive rainfall</p>
+                                        <span class="claim-date">15 Jan 2024</span>
+                                    </div>
+                                    <span class="claim-status pending">Pending</span>
+                                </div>
+                                
+                                <div class="claim-item">
+                                    <div class="claim-info">
+                                        <h4>Mustard Pest Damage</h4>
+                                        <p>Pest infestation claim</p>
+                                        <span class="claim-date">10 Jan 2024</span>
+                                    </div>
+                                    <span class="claim-status approved">Approved</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="insurance-actions">
+                        <h2>Quick Actions</h2>
+                        <div class="action-buttons">
+                            <button class="action-btn">
+                                <i class="fas fa-file-alt"></i>
+                                <span>Check Eligibility</span>
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-upload"></i>
+                                <span>Upload Documents</span>
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-phone"></i>
+                                <span>Call Support</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Chat Widget -->
+        <div class="chat-widget" id="chat-widget">
+            <div class="chat-header">
+                <div class="chat-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="chat-info">
+                    <h4>SoilSense AI</h4>
+                    <span class="status online">Online</span>
+                </div>
+                <button class="chat-toggle" id="chat-toggle">
+                    <i class="fas fa-comments"></i>
+                </button>
+            </div>
+            
+            <div class="chat-body" id="chat-body">
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message bot">
+                        <div class="message-content">
+                            <p>Namaste! How can I help you today?</p>
+                        </div>
+                        <span class="message-time">Just now</span>
+                    </div>
+                </div>
+                
+                <div class="chat-input">
+                    <input type="text" placeholder="Type your message..." id="chat-input">
+                    <button class="send-btn" id="send-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Panel -->
+        <div class="notification-panel" id="notification-panel">
+            <div class="notification-header">
+                <h3>Notifications</h3>
+                <button class="close-notifications" id="close-notifications">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="notification-list">
+                <div class="notification-item urgent">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div class="notification-content">
+                        <h4>Pest Alert</h4>
+                        <p>Wheat rust detected in your field</p>
+                        <span class="notification-time">2 hours ago</span>
+                    </div>
+                </div>
+                
+                <div class="notification-item">
+                    <i class="fas fa-cloud-rain"></i>
+                    <div class="notification-content">
+                        <h4>Weather Update</h4>
+                        <p>Rain expected tomorrow</p>
+                        <span class="notification-time">1 day ago</span>
+                    </div>
+                </div>
+                
+                <div class="notification-item">
+                    <i class="fas fa-chart-line"></i>
+                    <div class="notification-content">
+                        <h4>Price Alert</h4>
+                        <p>Wheat prices up by ₹150</p>
+                        <span class="notification-time">2 days ago</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/chat.js"></script>
+</body>
+</html> 
